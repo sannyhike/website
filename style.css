@@ -1,5 +1,9 @@
 body {
-    background-color: black;
+ background-color: black;
+}
+
+p {
+    margin: 0%;
 }
 .orange {text-align: center;
     background-color: Orange;
