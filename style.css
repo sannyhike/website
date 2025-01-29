@@ -1,0 +1,29 @@
+body {
+    background-color: black;
+}
+.orange {text-align: center;
+    background-color: Orange;
+    color: orange;
+    font-family: roboto;
+    border-radius: 50px;
+}
+
+.white {text-align: center;
+    background-color: white;
+    color: blue;
+    font-family: roboto;
+    border-radius: 50px;
+}
+
+.green {
+    text-align: center;
+    color: green;
+    background-color: green;
+    font-family: roboto;
+    border-radius: 50px;
+}
+
+p {font-size: larger;
+    color:blue
+
+}
