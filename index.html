@@ -10,22 +10,76 @@
   <div class="container">
     <h1>Meme Uploader</h1>
     <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
-      <input type="file" name="meme" id="memeInput" accept="image/*" required />
+      <!-- Drop Zone for drag-and-drop and click selection -->
+      <div id="drop-zone" class="drop-zone">
+        <p>Drag and drop your meme here, or click to select a file.</p>
+        <input type="file" name="meme" id="memeInput" accept="image/*" required />
+      </div>
       <button type="submit">Upload Meme</button>
     </form>
     <div id="gallery">
-      <!-- Uploaded memes will be dynamically inserted here -->
+      <!-- Uploaded memes will appear here -->
     </div>
   </div>
 
   <script>
-    // Function to load the gallery with uploaded memes
+    // Get references to our DOM elements
+    const uploadForm = document.getElementById('uploadForm');
+    const memeInput = document.getElementById('memeInput');
+    const dropZone = document.getElementById('drop-zone');
+    const gallery = document.getElementById('gallery');
+
+    // Handle click on drop zone to trigger file input
+    dropZone.addEventListener('click', () => {
+      memeInput.click();
+    });
+
+    // Add drag-and-drop events
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    });
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('dragover');
+    });
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        memeInput.files = e.dataTransfer.files;
+        showPreview();
+      }
+    });
+
+    // Show a preview in the drop zone when a file is selected
+    function showPreview() {
+      const file = memeInput.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          dropZone.style.backgroundImage = `url(${e.target.result})`;
+          dropZone.style.backgroundSize = 'cover';
+          dropZone.style.backgroundPosition = 'center';
+          // Hide the instructional text while preview is visible
+          dropZone.querySelector('p').style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+      } else {
+        // If no file is selected, clear preview
+        dropZone.style.backgroundImage = 'none';
+        dropZone.querySelector('p').style.display = 'block';
+      }
+    }
+
+    // Update preview when file input changes (via click selection)
+    memeInput.addEventListener('change', showPreview);
+
+    // Load gallery images from the server
     async function loadGallery() {
       try {
         const response = await fetch('/memes');
         const memes = await response.json();
-        const gallery = document.getElementById('gallery');
-        gallery.innerHTML = '';
+        gallery.innerHTML = ''; // Clear the gallery
         memes.forEach(meme => {
           const img = document.createElement('img');
           img.src = meme.url;
@@ -37,13 +91,47 @@
       }
     }
 
-    // Refresh gallery after form submission
-    document.getElementById('uploadForm').addEventListener('submit', function () {
-      // Give the server a moment to process the upload before refreshing the gallery
-      setTimeout(loadGallery, 1000);
+    // Handle form submission via AJAX
+    uploadForm.addEventListener('submit', async (e) => {
+      e.preventDefault(); // Prevent the default form submission
+
+      if (memeInput.files.length === 0) {
+        alert('Please select a file!');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('meme', memeInput.files[0]);
+
+      try {
+        const response = await fetch('/upload', {
+          method: 'POST',
+          body: formData,
+          headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          // Add the newly uploaded meme to the gallery without reloading everything
+          const img = document.createElement('img');
+          img.src = result.url;
+          img.alt = 'Meme';
+          gallery.prepend(img);
+
+          // Reset the drop zone and file input
+          memeInput.value = '';
+          dropZone.style.backgroundImage = 'none';
+          dropZone.querySelector('p').style.display = 'block';
+        } else {
+          alert('Upload failed.');
+        }
+      } catch (error) {
+        console.error('Error uploading file:', error);
+        alert('Error uploading file.');
+      }
     });
 
-    // Load gallery on initial page load
+    // Load the gallery when the page loads
     loadGallery();
   </script>
 </body>
