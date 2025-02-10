@@ -1,7 +1,7 @@
 {
     "name": "meme-uploader",
     "version": "1.0.0",
-    "description": "A simple website to upload and display memes.",
+    "description": "A stylish website to upload and display memes.",
     "main": "server.js",
     "scripts": {
       "start": "node server.js"

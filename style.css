@@ -1,92 +1,115 @@
-/* Reset some basic elements */
+/* Reset defaults */
 * {
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
   }
   
+  /* Use system fonts for a clean look */
   body {
-    background: #f0f0f0;
-    font-family: Arial, sans-serif;
-    padding: 20px;
-  }
-  
-  .container {
-    max-width: 800px;
-    margin: 50px auto;
     background: #fff;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  h1 {
-    text-align: center;
-    margin-bottom: 1.5rem;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     color: #333;
+    line-height: 1.6;
   }
   
+  /* Container for centering content */
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  
+  /* Header styling */
+  header {
+    padding: 2rem 0;
+    text-align: center;
+    border-bottom: 1px solid #eaeaea;
+  }
+  
+  header h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    margin-bottom: 0.5rem;
+  }
+  
+  header .subtitle {
+    font-size: 1rem;
+    color: #666;
+  }
+  
+  /* Main content styling */
+  main {
+    padding: 3rem 0;
+  }
+  
+  /* Form styling */
   form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
+  }
+  
+  /* Styled button with smooth transitions */
+  button {
+    background-color: #0071e3; /* A refined blue tone */
+    color: #fff;
+    border: none;
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: block;
+    margin: 1rem auto 0 auto;
+  }
+  
+  button:hover {
+    background-color: #005bb5;
   }
   
   /* Drop Zone styling */
   .drop-zone {
-    width: 100%;
-    border: 2px dashed #ccc;
-    border-radius: 4px;
-    padding: 1rem;
+    border: 2px dashed #c0c0c0;
+    border-radius: 15px;
+    padding: 4rem;
     text-align: center;
-    margin-bottom: 1rem;
     cursor: pointer;
     position: relative;
-    transition: background-color 0.3s, border-color 0.3s;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    margin-bottom: 1.5rem;
+    background-color: #fafafa;
   }
   
   .drop-zone p {
-    margin: 0;
-    color: #666;
+    font-size: 1.125rem;
+    color: #888;
   }
   
   .drop-zone.dragover {
     background-color: #f0f8ff;
-    border-color: #007bff;
+    border-color: #0071e3;
   }
   
-  /* Hide the actual file input */
+  /* Hide the native file input */
   .drop-zone input[type="file"] {
     display: none;
   }
   
-  button {
-    background: #007bff;
-    color: #fff;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background 0.3s;
-  }
-  
-  button:hover {
-    background: #0056b3;
-  }
-  
-  /* Gallery grid styles */
-  #gallery {
+  /* Gallery grid styling */
+  .gallery {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1rem;
+    gap: 2rem;
   }
   
-  #gallery img {
+  .gallery img {
     width: 100%;
-    border-radius: 4px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+  
+  .gallery img:hover {
+    transform: scale(1.03);
   }
   

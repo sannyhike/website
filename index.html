@@ -7,20 +7,26 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="container">
-    <h1>Meme Uploader</h1>
-    <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
-      <!-- Drop Zone for drag-and-drop and click selection -->
-      <div id="drop-zone" class="drop-zone">
-        <p>Drag and drop your meme here, or click to select a file.</p>
-        <input type="file" name="meme" id="memeInput" accept="image/*" required />
-      </div>
-      <button type="submit">Upload Meme</button>
-    </form>
-    <div id="gallery">
-      <!-- Uploaded memes will appear here -->
+  <header>
+    <div class="container">
+      <h1>Meme Uploader</h1>
+      <p class="subtitle">Share your memes with style</p>
     </div>
-  </div>
+  </header>
+  <main>
+    <div class="container">
+      <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+        <div id="drop-zone" class="drop-zone">
+          <p>Drag and drop your meme here, or click to select a file.</p>
+          <input type="file" name="meme" id="memeInput" accept="image/*" required />
+        </div>
+        <button type="submit">Upload Meme</button>
+      </form>
+      <section id="gallery" class="gallery">
+        <!-- Uploaded memes will appear here -->
+      </section>
+    </div>
+  </main>
 
   <script>
     // Get references to our DOM elements
@@ -29,12 +35,12 @@
     const dropZone = document.getElementById('drop-zone');
     const gallery = document.getElementById('gallery');
 
-    // Handle click on drop zone to trigger file input
+    // When the drop zone is clicked, open the file dialog
     dropZone.addEventListener('click', () => {
       memeInput.click();
     });
 
-    // Add drag-and-drop events
+    // Handle drag events for the drop zone
     dropZone.addEventListener('dragover', (e) => {
       e.preventDefault();
       dropZone.classList.add('dragover');
@@ -60,18 +66,15 @@
           dropZone.style.backgroundImage = `url(${e.target.result})`;
           dropZone.style.backgroundSize = 'cover';
           dropZone.style.backgroundPosition = 'center';
-          // Hide the instructional text while preview is visible
           dropZone.querySelector('p').style.display = 'none';
         };
         reader.readAsDataURL(file);
       } else {
-        // If no file is selected, clear preview
         dropZone.style.backgroundImage = 'none';
         dropZone.querySelector('p').style.display = 'block';
       }
     }
 
-    // Update preview when file input changes (via click selection)
     memeInput.addEventListener('change', showPreview);
 
     // Load gallery images from the server
@@ -79,7 +82,7 @@
       try {
         const response = await fetch('/memes');
         const memes = await response.json();
-        gallery.innerHTML = ''; // Clear the gallery
+        gallery.innerHTML = '';
         memes.forEach(meme => {
           const img = document.createElement('img');
           img.src = meme.url;
@@ -93,32 +96,26 @@
 
     // Handle form submission via AJAX
     uploadForm.addEventListener('submit', async (e) => {
-      e.preventDefault(); // Prevent the default form submission
-
+      e.preventDefault();
       if (memeInput.files.length === 0) {
         alert('Please select a file!');
         return;
       }
-
       const formData = new FormData();
       formData.append('meme', memeInput.files[0]);
-
       try {
         const response = await fetch('/upload', {
           method: 'POST',
           body: formData,
           headers: { 'X-Requested-With': 'XMLHttpRequest' }
         });
-
         if (response.ok) {
           const result = await response.json();
-          // Add the newly uploaded meme to the gallery without reloading everything
           const img = document.createElement('img');
           img.src = result.url;
           img.alt = 'Meme';
           gallery.prepend(img);
-
-          // Reset the drop zone and file input
+          // Reset drop zone and file input
           memeInput.value = '';
           dropZone.style.backgroundImage = 'none';
           dropZone.querySelector('p').style.display = 'block';
@@ -131,7 +128,7 @@
       }
     });
 
-    // Load the gallery when the page loads
+    // Load the gallery on page load
     loadGallery();
   </script>
 </body>
